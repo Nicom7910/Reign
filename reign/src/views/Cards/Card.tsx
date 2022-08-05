@@ -3,7 +3,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useState } from "react";
 
 const Container = styled.div`
-  width: 550px;
+  width: 400px;
   height: 90px;
   padding: 0 0 0 26px;
   opacity: 0.8;
@@ -11,15 +11,28 @@ const Container = styled.div`
   border: solid 1px #979797;
   background-color: #fff;
   display: flex;
+
+  @media (min-width: 768px) {
+    width: 460px;
+  }
+
+  @media (max-width: 500px) {
+    width: 400px;
+  }
 `;
 
 const SubContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 300px;
+
+  @media (min-width: 768px) {
+    width: 460px;
+  }
 `;
 
 const Fav = styled.div`
-  width: 68px;
+  width: 10%;
   margin: 0 0 0 16px;
   padding: 35px 22px 33px;
   border-radius: 6px;
@@ -29,7 +42,7 @@ const Fav = styled.div`
 `;
 
 const Time = styled.span`
-  width: 200px;
+  width: 45%;
   height: 30px;
   font-family: Roboto;
   font-size: 11px;
@@ -43,7 +56,7 @@ const Time = styled.span`
 `;
 
 const Title = styled.span`
-  width: 440px;
+  width: 100%;
   height: 20px;
   font-family: Roboto;
   font-size: 14px;

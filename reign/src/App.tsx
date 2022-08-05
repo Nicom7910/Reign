@@ -12,16 +12,49 @@ const Container = styled.div`
 `;
 
 const SubContainer = styled.div`
-  padding: 50px 150px 50px 150px; ;
+  padding: 50px 50px 50px 50px;
+
+  @media (min-width: 600px) {
+    padding: 50px 150px 50px 150px;
+  }
+
+  @media (min-width: 1000px) {
+    padding: 50px 20px 50px 20px;
+  }
+
+  @media (min-width: 1400px) {
+    padding: 50px 150px 50px 150px;
+  }
 `;
 
 const CardsContainer = styled.section`
   height: 30rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   row-gap: 20px;
   padding-top: 20px;
-  padding-left: 100px;
+
+  @media (min-width: 960px) {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+    padding-left: 80px;
+  }
+
+  @media (min-width: 1000px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+  }
+
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    padding-left: 100px;
+  }
 `;
 
 const PaginationContainer = styled.section`
@@ -57,8 +90,23 @@ function App() {
     (async () => {
       const data = await getData(filter);
       setData(data.hits);
+      localStorage.setItem("likedItems", JSON.stringify(likedItems));
+      localStorage.setItem("filter", JSON.stringify(filter));
     })();
-  }, [filter]);
+  }, [likedItems, filter]);
+
+  useEffect(() => {
+    const items = localStorage.getItem("likedItems");
+    if (items) {
+      const data = JSON.parse(items);
+      setLikedItems(data);
+    }
+    const filters = localStorage.getItem("filter");
+    if (filters) {
+      const filter = JSON.parse(filters);
+      setFilter(filter);
+    }
+  }, []);
 
   return value === "All" ? (
     <Container>

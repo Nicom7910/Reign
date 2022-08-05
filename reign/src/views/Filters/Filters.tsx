@@ -7,7 +7,13 @@ const Select = styled.select`
   border-radius: 4px;
   border: solid 1px #2e2e2e;
   background-color: #fff;
-  margin-left: 100px;
+  margin-top: 20px;
+
+  @media (min-width: 960px) {
+    width: 240px;
+    padding: 5px 12px 5px 12px;
+    margin-left: 100px;
+  }
 `;
 
 interface FilterProps {
