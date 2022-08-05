@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Container = styled.header`
   width: 100%;
-  height: 8rem;
+  height: 5rem;
   padding: 4.5rem 0 0 5rem;
   background-image: linear-gradient(to bottom, #ececec -32%, #fff 124%);
   box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);

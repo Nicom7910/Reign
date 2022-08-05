@@ -61,6 +61,7 @@ const Checkbox = styled.input`
 `;
 
 interface Data {
+  id: number;
   created_at: string;
   author: string;
   story_title: string;
@@ -69,6 +70,8 @@ interface Data {
 
 interface Props {
   item: Data;
+  likedItems: Data[];
+  setLikedItems: (item: Data[]) => void;
 }
 
 const ImageStyle = {
@@ -79,9 +82,7 @@ const ImageStyle = {
 };
 // <FaHeart style={ImageStyle} />
 
-const Card = ({ item }: Props) => {
-  const [likedItems, setLikedItems] = useState<Array<Data>>([]);
-
+const Card = ({ item, likedItems, setLikedItems }: Props) => {
   const handleCheck =
     (item: Data) => (event: React.ChangeEvent<HTMLInputElement>) => {
       var updatedList = [...likedItems];
@@ -97,9 +98,12 @@ const Card = ({ item }: Props) => {
     <Container>
       <SubContainer>
         <Time>
-          {Date.parse(item.created_at).toLocaleString()} by {item.author}
+          {Date.parse(item.created_at).toLocaleString()} by{" "}
+          {item.author !== null ? item.author : "No Author"}
         </Time>
-        <Title> {item.story_title}</Title>
+        <Title>
+          {item.story_title !== null ? item.story_title : "No Title"}
+        </Title>
       </SubContainer>
       <Fav>
         <Checkbox type="checkbox" onChange={handleCheck(item)} />
