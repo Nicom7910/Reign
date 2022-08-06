@@ -87,6 +87,7 @@ interface Data {
   id: number;
   created_at: string;
   author: string;
+  story_id: number;
   story_title: string;
   story_url: string;
   checked: boolean;
@@ -96,9 +97,8 @@ interface Props {
   item: Data;
   likedItems: Data[];
   setLikedItems: (item: Data[]) => void;
-  checked: boolean;
-  setOpenModal: (open: boolean) => void;
-  setDataModal: (text: string) => void;
+  isChecked: boolean;
+  setNewId: (id: number | undefined) => void;
 }
 
 const ClockStyle = {
@@ -113,17 +113,17 @@ const Card = ({
   item,
   likedItems,
   setLikedItems,
-  checked,
-  setOpenModal,
-  setDataModal,
+  isChecked,
+  setNewId,
 }: Props) => {
   const handleCheck =
     (item: Data) => (event: React.ChangeEvent<HTMLInputElement>) => {
       var updatedList = [...likedItems];
       if (event.target.checked) {
-        item.checked = true;
+        setNewId(item.story_id);
         updatedList = [...likedItems, item];
       } else {
+        setNewId(undefined);
         updatedList.splice(likedItems.indexOf(item), 1);
       }
       setLikedItems(updatedList);
@@ -132,13 +132,8 @@ const Card = ({
   const time = moment(item.created_at).fromNow();
 
   return (
-    <Container
-      onClick={() => {
-        setOpenModal(true);
-        setDataModal(item.story_url);
-      }}
-    >
-      <SubContainer>
+    <Container>
+      <SubContainer onClick={() => window.open(item.story_url)}>
         <Time>
           <FaRegClock size="16px" style={ClockStyle} />
           <Timer>
@@ -151,7 +146,7 @@ const Card = ({
         </Title>
       </SubContainer>
       <Fav>
-        {checked ? (
+        {isChecked ? (
           <FaHeart
             size="20px"
             style={{
@@ -170,7 +165,11 @@ const Card = ({
             }}
           />
         )}
-        <Checkbox type="checkbox" onChange={handleCheck(item)} />
+        <Checkbox
+          type="checkbox"
+          checked={isChecked}
+          onChange={handleCheck(item)}
+        />
       </Fav>
     </Container>
   );

@@ -5,7 +5,6 @@ import axios from "axios";
 import styled from "styled-components";
 import Filter from "./views/Filters/Filters";
 import News from "./views/News/News";
-import Modal from "./views/Modal/Modal";
 
 const Container = styled.div`
   width: 100%;
@@ -72,6 +71,7 @@ interface Data {
   id: number;
   created_at: string;
   author: string;
+  story_id: number;
   story_title: string;
   story_url: string;
   checked: boolean;
@@ -82,8 +82,7 @@ function App() {
   const [filter, setFilter] = useState<string>("");
   const [value, setValue] = useState<string>("All");
   const [likedItems, setLikedItems] = useState<Array<Data>>([]);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [dataModal, setDataModal] = useState<string>("");
+  const [id, setNewId] = useState<number>();
 
   useEffect(() => {
     (async () => {
@@ -98,8 +97,8 @@ function App() {
   useEffect(() => {
     const items = localStorage.getItem("likedItems");
     if (items) {
-      const data = JSON.parse(items);
-      setLikedItems(data);
+      const favs = JSON.parse(items);
+      setLikedItems(favs);
     }
     const filters = localStorage.getItem("filter");
     if (filters) {
@@ -109,58 +108,48 @@ function App() {
   }, []);
 
   return value === "Favs" ? (
-    <>
-      <Container>
-        <Header />
-        <SubContainer>
-          <News setValue={setValue} />
-          <FavsContainer>
-            <CardsContainer>
-              {likedItems &&
-                likedItems.map((item, index) => (
-                  <Card
-                    key={index}
-                    item={item}
-                    likedItems={likedItems}
-                    setLikedItems={setLikedItems}
-                    checked={likedItems.includes(item)}
-                    setOpenModal={setOpenModal}
-                    setDataModal={setDataModal}
-                  />
-                ))}
-            </CardsContainer>
-          </FavsContainer>
-        </SubContainer>
-      </Container>
-      {openModal && <Modal setOpenModal={setOpenModal} dataModal={dataModal} />}
-    </>
-  ) : (
-    <>
-      <Container>
-        <Header />
-        <SubContainer>
-          <News setValue={setValue} />
-          <Filter filter={filter} setFilter={setFilter} />
+    <Container>
+      <Header />
+      <SubContainer>
+        <News setValue={setValue} />
+        <FavsContainer>
           <CardsContainer>
-            {data &&
-              data.map((item, index) => (
-                <>
-                  <Card
-                    key={index}
-                    item={item}
-                    likedItems={likedItems}
-                    setLikedItems={setLikedItems}
-                    checked={item.checked}
-                    setOpenModal={setOpenModal}
-                    setDataModal={setDataModal}
-                  />
-                </>
+            {likedItems &&
+              likedItems.map((item, index) => (
+                <Card
+                  key={index}
+                  item={item}
+                  likedItems={likedItems}
+                  setLikedItems={setLikedItems}
+                  isChecked={likedItems.includes(item)}
+                  setNewId={setNewId}
+                />
               ))}
           </CardsContainer>
-        </SubContainer>
-      </Container>
-      {openModal && <Modal setOpenModal={setOpenModal} dataModal={dataModal} />}
-    </>
+        </FavsContainer>
+      </SubContainer>
+    </Container>
+  ) : (
+    <Container>
+      <Header />
+      <SubContainer>
+        <News setValue={setValue} />
+        <Filter filter={filter} setFilter={setFilter} />
+        <CardsContainer>
+          {data &&
+            data.map((item, index) => (
+              <Card
+                key={index}
+                item={item}
+                likedItems={likedItems}
+                setLikedItems={setLikedItems}
+                isChecked={id === item.story_id}
+                setNewId={setNewId}
+              />
+            ))}
+        </CardsContainer>
+      </SubContainer>
+    </Container>
   );
 }
 
