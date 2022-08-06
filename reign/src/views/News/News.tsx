@@ -46,6 +46,7 @@ const FirstLabel = styled.label`
 
   > ${SecondLabel}:after {
     content: "All";
+    color: #1797ff;
     width: 90px;
     height: 35px;
     background: #fff;
@@ -71,12 +72,9 @@ const Input = styled.input`
   z-index: 1;
   margin: 0px;
 
-  &:checked + ${SecondLabel} {
-    color: #606060;
-  }
   &:checked + ${SecondLabel}:after {
     content: "Favs";
-    color: #606060;
+    color: #1797ff;
     border-radius: 2px;
     border: solid 1px #1797ff;
     left: 107px;

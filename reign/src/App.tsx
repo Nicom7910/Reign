@@ -8,7 +8,7 @@ import News from "./views/News/News";
 
 const Container = styled.div`
   width: 100%;
-  height: 90%;
+  height: 100%;
 `;
 
 const SubContainer = styled.div`
@@ -106,6 +106,7 @@ function App() {
       setFilter(filter);
     }
   }, []);
+  console.log(data);
 
   return value === "Favs" ? (
     <Container>
