@@ -17,18 +17,68 @@ const Select = styled.select`
 `;
 
 interface FilterProps {
+  filter: string;
   setFilter: (filter: string) => void;
 }
 
-const Filter = ({ setFilter }: FilterProps) => (
-  <Select onChange={(e) => setFilter(e.target.value)}>
-    <option value="" defaultChecked>
-      Select your News
-    </option>
-    <option value="angular">Angular</option>
-    <option value="reactjs">React</option>
-    <option value="vuejs">VueJs</option>
-  </Select>
-);
+const Filter = ({ filter, setFilter }: FilterProps) => {
+  const Options = () => {
+    switch (filter) {
+      case "angular":
+        return (
+          <>
+            <option value="angular" defaultChecked>
+              {filter[0].toUpperCase() + filter.slice(1)}
+            </option>
+            <option value="">Select your News</option>
+            <option value="reactjs">React</option>
+            <option value="vuejs">VueJs</option>
+          </>
+        );
+      case "reactjs":
+        return (
+          <>
+            <option value="reactjs" defaultChecked>
+              {filter[0].toUpperCase() + filter.slice(1)}
+            </option>
+            <option value="">Select your News</option>
+
+            <option value="angular">Angular</option>
+            <option value="vuejs">VueJs</option>
+          </>
+        );
+      case "vuejs":
+        return (
+          <>
+            <option value="vuejs" defaultChecked>
+              {filter[0].toUpperCase() + filter.slice(1)}
+            </option>
+            <option value="">Select your News</option>
+
+            <option value="reactjs">React</option>
+            <option value="angular">Angular</option>
+          </>
+        );
+
+      default:
+        return (
+          <>
+            <option value="" defaultChecked>
+              Select your News
+            </option>
+            <option value="angular">Angular</option>
+            <option value="reactjs">React</option>
+            <option value="vuejs">VueJs</option>
+          </>
+        );
+    }
+  };
+
+  return (
+    <Select onChange={(e) => setFilter(e.target.value)}>
+      <Options />
+    </Select>
+  );
+};
 
 export default Filter;

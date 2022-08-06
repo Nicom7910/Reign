@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useState } from "react";
+import { FaHeart, FaRegHeart, FaRegClock } from "react-icons/fa";
+import moment from "moment";
 
 const Container = styled.div`
   width: 400px;
@@ -11,6 +11,10 @@ const Container = styled.div`
   border: solid 1px #979797;
   background-color: #fff;
   display: flex;
+
+  &:hover {
+    opacity: 0.5;
+  }
 
   @media (min-width: 768px) {
     width: 460px;
@@ -42,7 +46,7 @@ const Fav = styled.div`
 `;
 
 const Time = styled.span`
-  width: 45%;
+  width: 65%;
   height: 30px;
   font-family: Roboto;
   font-size: 11px;
@@ -53,6 +57,8 @@ const Time = styled.span`
   letter-spacing: normal;
   color: #767676;
   padding-top: 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const Title = styled.span`
@@ -70,7 +76,11 @@ const Title = styled.span`
 
 const Checkbox = styled.input`
   position: relative;
-  left: 10px;
+  right: 15px;
+  opacity: 0;
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 interface Data {
@@ -79,27 +89,39 @@ interface Data {
   author: string;
   story_title: string;
   story_url: string;
+  checked: boolean;
 }
 
 interface Props {
   item: Data;
   likedItems: Data[];
   setLikedItems: (item: Data[]) => void;
+  checked: boolean;
+  setOpenModal: (open: boolean) => void;
+  setDataModal: (text: string) => void;
 }
 
-const ImageStyle = {
-  color: "red",
-  fontSize: "25px",
-  padding: "0 0 0 10px",
-  opacity: 1,
+const ClockStyle = {
+  padding: "0 5px 0 0",
 };
-// <FaHeart style={ImageStyle} />
 
-const Card = ({ item, likedItems, setLikedItems }: Props) => {
+const Timer = styled.p`
+  font-size: 11px;
+`;
+
+const Card = ({
+  item,
+  likedItems,
+  setLikedItems,
+  checked,
+  setOpenModal,
+  setDataModal,
+}: Props) => {
   const handleCheck =
     (item: Data) => (event: React.ChangeEvent<HTMLInputElement>) => {
       var updatedList = [...likedItems];
       if (event.target.checked) {
+        item.checked = true;
         updatedList = [...likedItems, item];
       } else {
         updatedList.splice(likedItems.indexOf(item), 1);
@@ -107,18 +129,47 @@ const Card = ({ item, likedItems, setLikedItems }: Props) => {
       setLikedItems(updatedList);
     };
 
+  const time = moment(item.created_at).fromNow();
+
   return (
-    <Container>
+    <Container
+      onClick={() => {
+        setOpenModal(true);
+        setDataModal(item.story_url);
+      }}
+    >
       <SubContainer>
         <Time>
-          {Date.parse(item.created_at).toLocaleString()} by{" "}
-          {item.author !== null ? item.author : "No Author"}
+          <FaRegClock size="16px" style={ClockStyle} />
+          <Timer>
+            {time} by
+            {item.author !== null ? item.author : "No Author"}
+          </Timer>
         </Time>
         <Title>
           {item.story_title !== null ? item.story_title : "No Title"}
         </Title>
       </SubContainer>
       <Fav>
+        {checked ? (
+          <FaHeart
+            size="20px"
+            style={{
+              color: "red",
+              position: "relative",
+              left: "5px",
+            }}
+          />
+        ) : (
+          <FaRegHeart
+            size="20px"
+            style={{
+              color: "red",
+              position: "relative",
+              left: "5px",
+            }}
+          />
+        )}
         <Checkbox type="checkbox" onChange={handleCheck(item)} />
       </Fav>
     </Container>

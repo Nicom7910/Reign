@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import Filter from "./views/Filters/Filters";
-import { Pagination } from "@mui/material";
 import News from "./views/News/News";
+import Modal from "./views/Modal/Modal";
 
 const Container = styled.div`
   width: 100%;
+  height: 90%;
 `;
 
 const SubContainer = styled.div`
@@ -25,6 +26,10 @@ const SubContainer = styled.div`
   @media (min-width: 1400px) {
     padding: 50px 150px 50px 150px;
   }
+`;
+
+const FavsContainer = styled.section`
+  padding-top: 50px;
 `;
 
 const CardsContainer = styled.section`
@@ -57,14 +62,6 @@ const CardsContainer = styled.section`
   }
 `;
 
-const PaginationContainer = styled.section`
-  position: relative;
-  bottom: 4rem;
-  display: flex;
-  justify-content: space-around;
-  flex-direction: row;
-`;
-
 const getData = async (filter: string) => {
   const url = `https://hn.algolia.com/api/v1/search_by_date?query=${filter}&page=0`;
   const response = await axios.get<any>(url);
@@ -77,6 +74,7 @@ interface Data {
   author: string;
   story_title: string;
   story_url: string;
+  checked: boolean;
 }
 
 function App() {
@@ -84,12 +82,14 @@ function App() {
   const [filter, setFilter] = useState<string>("");
   const [value, setValue] = useState<string>("All");
   const [likedItems, setLikedItems] = useState<Array<Data>>([]);
-  // const [page, setPage] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [dataModal, setDataModal] = useState<string>("");
 
   useEffect(() => {
     (async () => {
-      const data = await getData(filter);
-      setData(data.hits);
+      const response = await getData(filter);
+      const data = response.hits;
+      setData(data);
       localStorage.setItem("likedItems", JSON.stringify(likedItems));
       localStorage.setItem("filter", JSON.stringify(filter));
     })();
@@ -108,50 +108,59 @@ function App() {
     }
   }, []);
 
-  return value === "All" ? (
-    <Container>
-      <Header />
-      <SubContainer>
-        <News setValue={setValue} />
-        <Filter setFilter={setFilter} />
-        <CardsContainer>
-          {data &&
-            data.map((item, index) => (
-              <Card
-                key={index}
-                item={item}
-                likedItems={likedItems}
-                setLikedItems={setLikedItems}
-              />
-            ))}
-        </CardsContainer>
-      </SubContainer>
-      <PaginationContainer>
-        <Pagination count={10} />
-      </PaginationContainer>
-    </Container>
+  return value === "Favs" ? (
+    <>
+      <Container>
+        <Header />
+        <SubContainer>
+          <News setValue={setValue} />
+          <FavsContainer>
+            <CardsContainer>
+              {likedItems &&
+                likedItems.map((item, index) => (
+                  <Card
+                    key={index}
+                    item={item}
+                    likedItems={likedItems}
+                    setLikedItems={setLikedItems}
+                    checked={likedItems.includes(item)}
+                    setOpenModal={setOpenModal}
+                    setDataModal={setDataModal}
+                  />
+                ))}
+            </CardsContainer>
+          </FavsContainer>
+        </SubContainer>
+      </Container>
+      {openModal && <Modal setOpenModal={setOpenModal} dataModal={dataModal} />}
+    </>
   ) : (
-    <Container>
-      <Header />
-      <SubContainer>
-        <News setValue={setValue} />
-        <Filter setFilter={setFilter} />
-        <CardsContainer>
-          {likedItems &&
-            likedItems.map((item, index) => (
-              <Card
-                key={index}
-                item={item}
-                likedItems={likedItems}
-                setLikedItems={setLikedItems}
-              />
-            ))}
-        </CardsContainer>
-      </SubContainer>
-      <PaginationContainer>
-        <Pagination count={10} />
-      </PaginationContainer>
-    </Container>
+    <>
+      <Container>
+        <Header />
+        <SubContainer>
+          <News setValue={setValue} />
+          <Filter filter={filter} setFilter={setFilter} />
+          <CardsContainer>
+            {data &&
+              data.map((item, index) => (
+                <>
+                  <Card
+                    key={index}
+                    item={item}
+                    likedItems={likedItems}
+                    setLikedItems={setLikedItems}
+                    checked={item.checked}
+                    setOpenModal={setOpenModal}
+                    setDataModal={setDataModal}
+                  />
+                </>
+              ))}
+          </CardsContainer>
+        </SubContainer>
+      </Container>
+      {openModal && <Modal setOpenModal={setOpenModal} dataModal={dataModal} />}
+    </>
   );
 }
 
