@@ -82,7 +82,7 @@ function App() {
   const [filter, setFilter] = useState<string>("");
   const [value, setValue] = useState<string>("All");
   const [likedItems, setLikedItems] = useState<Array<Data>>([]);
-  const [id, setNewId] = useState<number>();
+  const [id, setNewId] = useState<Array<Data>>(likedItems);
 
   useEffect(() => {
     (async () => {
@@ -106,7 +106,6 @@ function App() {
       setFilter(filter);
     }
   }, []);
-  console.log(data);
 
   return value === "Favs" ? (
     <Container>
@@ -144,7 +143,7 @@ function App() {
                 item={item}
                 likedItems={likedItems}
                 setLikedItems={setLikedItems}
-                isChecked={id === item.story_id}
+                isChecked={id.includes(item)}
                 setNewId={setNewId}
               />
             ))}

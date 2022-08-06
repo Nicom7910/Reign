@@ -98,7 +98,7 @@ interface Props {
   likedItems: Data[];
   setLikedItems: (item: Data[]) => void;
   isChecked: boolean;
-  setNewId: (id: number | undefined) => void;
+  setNewId: (id: Data[]) => void;
 }
 
 const ClockStyle = {
@@ -120,13 +120,12 @@ const Card = ({
     (item: Data) => (event: React.ChangeEvent<HTMLInputElement>) => {
       var updatedList = [...likedItems];
       if (event.target.checked) {
-        setNewId(item.story_id);
         updatedList = [...likedItems, item];
       } else {
-        setNewId(undefined);
         updatedList.splice(likedItems.indexOf(item), 1);
       }
       setLikedItems(updatedList);
+      setNewId(updatedList);
     };
 
   const time = moment(item.created_at).fromNow();
